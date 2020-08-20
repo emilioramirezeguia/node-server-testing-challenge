@@ -10,5 +10,5 @@ function find() {
 }
 
 function add(user) {
-  return null;
+  return db("users").insert(user, "id");
 }

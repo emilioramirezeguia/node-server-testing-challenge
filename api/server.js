@@ -13,4 +13,14 @@ server.get("/", (req, res) => {
     .catch((error) => res.status(500).json({ error: error.message }));
 });
 
+server.post("/", (req, res) => {
+  Users.add(req.body)
+    .then((ids) => {
+      res.status(201).json({ ids });
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
+});
+
 module.exports = server;
