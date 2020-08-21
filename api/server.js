@@ -23,4 +23,14 @@ server.post("/", (req, res) => {
     });
 });
 
+server.delete("/:id", (req, res) => {
+  Users.remove(req.params.id)
+    .then((response) => {
+      res.status(204).end();
+    })
+    .catch((error) => {
+      res.status(500).json({ error: error.message });
+    });
+});
+
 module.exports = server;

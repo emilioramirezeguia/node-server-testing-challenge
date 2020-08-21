@@ -5,9 +5,6 @@ const db = require("../data/dbConfig");
 const Users = require("../users/usersModel");
 
 describe("server", () => {
-  beforeEach(async () => {
-    await db("users").truncate();
-  });
   describe("GET /", () => {
     it("should return 200 OK", async () => {
       //Option 1
@@ -29,7 +26,10 @@ describe("server", () => {
     });
   });
 
-  describe.only("POST /", () => {
+  describe("POST /", () => {
+    beforeEach(async () => {
+      await db("users").truncate();
+    });
     it("should return 201 Created with users", async () => {
       const response = await supertest(server).post("/").send({ name: "Gaby" });
       expect(response.status).toBe(201);
@@ -44,6 +44,21 @@ describe("server", () => {
           //   expect(response).toBeInstanceOf(Array);
           expect(response.body.ids).toHaveLength(1);
         });
+    });
+  });
+
+  describe("DELETE /", () => {
+    beforeEach(async () => {
+      await db("users").truncate();
+    });
+    it.only("should return 204 No Content", async () => {
+      await supertest(server).post("/").send({ name: "Kyle" });
+      const users = await db("users");
+      expect(users[0]).toHaveProperty("name", "Kyle");
+      const response = await supertest(server).delete("/1");
+      expect(response.status).toBe(204);
+      const noUsers = await db("users");
+      expect(noUsers).toHaveLength(0);
     });
   });
 });
